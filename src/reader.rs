@@ -255,6 +255,14 @@ impl<R: Read + Seek> Mp4Reader<R> {
         }
     }
 
+    pub fn is_sync_sample(&mut self, track_id: u32, sample_id: u32) -> Result<bool> {
+        if let Some(track) = self.tracks.get(&track_id) {
+            track.is_sync_sample(sample_id)
+        } else {
+            Err(Error::TrakNotFound(track_id))
+        }
+    }
+
     pub fn read_sample(&mut self, track_id: u32, sample_id: u32) -> Result<Option<Mp4Sample>> {
         if let Some(track) = self.tracks.get(&track_id) {
             track.read_sample(&mut self.reader, sample_id)
