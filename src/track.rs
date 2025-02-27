@@ -317,7 +317,7 @@ impl Mp4Track {
         Ok(self.trak.mdia.minf.stbl.stsc.entries.len() - 1)
     }
 
-    fn chunk_offset(&self, chunk_id: u32) -> Result<u64> {
+    pub fn chunk_offset(&self, chunk_id: u32) -> Result<u64> {
         if self.trak.mdia.minf.stbl.stco.is_none() && self.trak.mdia.minf.stbl.co64.is_none() {
             return Err(Error::InvalidData("must have either stco or co64 boxes"));
         }
@@ -386,7 +386,7 @@ impl Mp4Track {
         None
     }
 
-    fn sample_size(&self, sample_id: u32) -> Result<u32> {
+    pub fn sample_size(&self, sample_id: u32) -> Result<u32> {
         if !self.trafs.is_empty() {
             if let Some((traf_idx, sample_idx)) = self.find_traf_idx_and_sample_idx(sample_id) {
                 if let Some(size) = self.trafs[traf_idx]
@@ -424,7 +424,7 @@ impl Mp4Track {
         }
     }
 
-    fn total_sample_size(&self) -> u64 {
+    pub fn total_sample_size(&self) -> u64 {
         let stsz = &self.trak.mdia.minf.stbl.stsz;
         if stsz.sample_size > 0 {
             stsz.sample_size as u64 * self.sample_count() as u64
@@ -499,7 +499,7 @@ impl Mp4Track {
         }
     }
 
-    fn sample_time(&self, sample_id: u32) -> Result<(u64, u32)> {
+    pub fn sample_time(&self, sample_id: u32) -> Result<(u64, u32)> {
         if !self.trafs.is_empty() {
             let mut base_start_time = 0;
             let mut default_sample_duration = self.default_sample_duration;
@@ -557,7 +557,7 @@ impl Mp4Track {
         }
     }
 
-    fn sample_rendering_offset(&self, sample_id: u32) -> i32 {
+    pub fn sample_rendering_offset(&self, sample_id: u32) -> i32 {
         if !self.trafs.is_empty() {
             if let Some((traf_idx, sample_idx)) = self.find_traf_idx_and_sample_idx(sample_id) {
                 if let Some(cts) = self.trafs[traf_idx]
@@ -577,7 +577,7 @@ impl Mp4Track {
         0
     }
 
-    fn is_sync_sample(&self, sample_id: u32) -> bool {
+    pub fn is_sync_sample(&self, sample_id: u32) -> bool {
         if !self.trafs.is_empty() {
             let sample_sizes_count = self.sample_count() / self.trafs.len() as u32;
             return sample_id == 1 || sample_id % sample_sizes_count == 0;
