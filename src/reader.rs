@@ -7,14 +7,14 @@ use crate::*;
 
 #[derive(Debug)]
 pub struct Mp4Reader<R> {
-    reader: R,
+    pub reader: R,
     pub ftyp: FtypBox,
     pub moov: MoovBox,
     pub moofs: Vec<MoofBox>,
     pub emsgs: Vec<EmsgBox>,
 
-    tracks: HashMap<u32, Mp4Track>,
-    size: u64,
+    pub tracks: HashMap<u32, Mp4Track>,
+    pub size: u64,
 }
 
 impl<R: Read + Seek> Mp4Reader<R> {
