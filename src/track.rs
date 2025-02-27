@@ -590,7 +590,7 @@ impl Mp4Track {
         }
     }
 
-    pub(crate) fn read_sample<R: Read + Seek>(
+    pub fn read_sample<R: Read + Seek>(
         &self,
         reader: &mut R,
         sample_id: u32,
